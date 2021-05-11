@@ -111,7 +111,7 @@ public class PeopleImpl extends ConnectionDB implements PeopleDAO {
     }
 
     @Override
-    public People getPeople(int id) {
+    public People get(int id) {
         People people = null;
         String sql = "SELECT * FROM people WHERE id=?";
         try {

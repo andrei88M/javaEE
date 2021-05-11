@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Creator extends ConnectionDB{
+public class Creator extends ConnectionDB {
     public void createDB() {
         String createSQL = "CREATE DATABASE hw";
         String dropSQL = "DROP DATABASE if exists hw";
@@ -30,6 +30,25 @@ public class Creator extends ConnectionDB{
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(address);
             statement.executeUpdate(people);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void createTableOneToMany() {
+        String people = "CREATE TABLE people(id int primary key auto_increment," +
+                "name varchar (50)," +
+                "surname varchar (50)," +
+                "age int )";
+        String address = "CREATE TABLE address(id int primary key auto_increment," +
+                "people_id int ," +
+                "street varchar (50)," +
+                "house int ," +
+                "foreign key (people_id) references people(id))";
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate(people);
+            statement.executeUpdate(address);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

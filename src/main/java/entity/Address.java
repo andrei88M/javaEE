@@ -13,4 +13,5 @@ public class Address {
     private int id;
     private String street;
     private int house;
+    private int people_id;
 }

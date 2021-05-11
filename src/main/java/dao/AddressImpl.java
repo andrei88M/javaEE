@@ -3,7 +3,6 @@ package dao;
 import entity.Address;
 import util.ConnectionDB;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class AddressImpl extends ConnectionDB implements AddressDAO {
     @Override
-    public Address getAddress(int id) {
+    public Address get(int id) {
         Address address = null;
         String sql = "SELECT * FROM address WHERE id=?";
         try {
@@ -23,6 +22,7 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
             if (resultSet.next()) {
                 address = Address.builder()
                         .id(resultSet.getInt("id"))
+                        .people_id(resultSet.getInt("people_id"))
                         .street(resultSet.getString("street"))
                         .house(resultSet.getInt("house"))
                         .build();
@@ -50,12 +50,13 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
 
     @Override
     public void save(Address address) {
-        String sql = "INSERT INTO address(street,house) VALUES (?,?)";
+        String sql = "INSERT INTO address(street,house,people_id) VALUES (?,?,?)";
         try {
             connection = getConnection();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, address.getStreet());
             preparedStatement.setInt(2, address.getHouse());
+            preparedStatement.setInt(3,address.getPeople_id());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -88,6 +89,7 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
             while (resultSet.next()) {
                 Address address = Address.builder()
                         .id(resultSet.getInt("id"))
+                        .people_id(resultSet.getInt("people_id"))
                         .street(resultSet.getString("street"))
                         .house(resultSet.getInt("house"))
                         .build();
@@ -111,13 +113,14 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
 
     @Override
     public void update(Address address) {
-        String sql = "UPDATE address SET street=?,house=? WHERE id=?";
+        String sql = "UPDATE address SET street=?,house=?,people_id=? WHERE id=?";
         try {
             connection = getConnection();
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, address.getStreet());
             preparedStatement.setInt(2, address.getHouse());
-            preparedStatement.setInt(3, address.getId());
+            preparedStatement.setInt(3,address.getPeople_id());
+            preparedStatement.setInt(4, address.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
