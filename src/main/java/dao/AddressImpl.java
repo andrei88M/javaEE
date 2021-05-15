@@ -12,14 +12,13 @@ import java.util.List;
 
 public class AddressImpl extends ConnectionDB implements AddressDAO {
     @Override
-    public Address getAddress(int id) {
+    public Address get(int id) {
         Address address = null;
-        String sql = "SELECT * FROM address WHERE id=?";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            callableStatement = connection.prepareCall("{call getAddress(?)}");
+            callableStatement.setInt(1, id);
+            resultSet = callableStatement.executeQuery();
             if (resultSet.next()) {
                 address = Address.builder()
                         .id(resultSet.getInt("id"))
@@ -44,6 +43,13 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
                     throwables.printStackTrace();
                 }
             }
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
         }
         return address;
     }
@@ -53,10 +59,10 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
         String sql = "INSERT INTO address(street,house) VALUES (?,?)";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, address.getStreet());
-            preparedStatement.setInt(2, address.getHouse());
-            preparedStatement.executeUpdate();
+            callableStatement = connection.prepareCall("{call saveAddress(?,?)}");
+            callableStatement.setString(1, address.getStreet());
+            callableStatement.setInt(2, address.getHouse());
+            callableStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -70,6 +76,13 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
             if (connection != null) {
                 try {
                     connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+            if (callableStatement != null) {
+                try {
+                    callableStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -111,20 +124,19 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
 
     @Override
     public void update(Address address) {
-        String sql = "UPDATE address SET street=?,house=? WHERE id=?";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, address.getStreet());
-            preparedStatement.setInt(2, address.getHouse());
-            preparedStatement.setInt(3, address.getId());
-            preparedStatement.executeUpdate();
+            callableStatement = connection.prepareCall("{call updateAddress(?,?,?)}");
+            callableStatement.setInt("inId", address.getId());
+            callableStatement.setString("inStreet", address.getStreet());
+            callableStatement.setInt("inHouse", address.getHouse());
+            callableStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
-            if (preparedStatement != null) {
+            if (callableStatement != null) {
                 try {
-                    preparedStatement.close();
+                    callableStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -144,15 +156,15 @@ public class AddressImpl extends ConnectionDB implements AddressDAO {
         String sql = "DELETE FROM address WHERE id=?";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, address.getId());
-            preparedStatement.executeUpdate();
+            callableStatement = connection.prepareCall("{call deleteAddress(?)}");
+            callableStatement.setInt(1,address.getId());
+            callableStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
-            if (preparedStatement != null) {
+            if (callableStatement != null) {
                 try {
-                    preparedStatement.close();
+                    callableStatement.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

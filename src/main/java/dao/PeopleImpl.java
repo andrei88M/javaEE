@@ -12,14 +12,13 @@ import java.util.List;
 public class PeopleImpl extends ConnectionDB implements PeopleDAO {
     @Override
     public void save(People people) {
-        String sql = "INSERT INTO people(name,surname,age) VALUES (?,?,?)";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(3, people.getAge());
-            preparedStatement.setString(2, people.getSurname());
-            preparedStatement.setString(1, people.getName());
-            preparedStatement.executeUpdate();
+            callableStatement = connection.prepareCall("{call savePeople(?,?,?)}");
+            callableStatement.setString("inName", people.getName());
+            callableStatement.setString("inSurname", people.getSurname());
+            callableStatement.setInt("inAge", people.getAge());
+            callableStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -63,12 +62,12 @@ public class PeopleImpl extends ConnectionDB implements PeopleDAO {
         String sql = "UPDATE people SET name =?,surname=?,age=? WHERE id=?";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, people.getName());
-            preparedStatement.setString(2, people.getSurname());
-            preparedStatement.setInt(3, people.getAge());
-            preparedStatement.setInt(4,people.getId());
-            preparedStatement.executeUpdate();
+            callableStatement = connection.prepareCall("{call updatePeople(?,?,?,?)}");
+            callableStatement.setInt("inId", people.getId());
+            callableStatement.setString("inName", people.getName());
+            callableStatement.setString("inSurname", people.getSurname());
+            callableStatement.setInt("inAge", people.getAge());
+            callableStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -84,12 +83,11 @@ public class PeopleImpl extends ConnectionDB implements PeopleDAO {
 
     @Override
     public void delete(People people) {
-        String sql = "DELETE FROM people WHERE id=?";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, people.getId());
-            preparedStatement.executeUpdate();
+            callableStatement = connection.prepareCall("{call daletePeople(?)}");
+            callableStatement.setInt("inId", people.getId());
+            callableStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -111,15 +109,14 @@ public class PeopleImpl extends ConnectionDB implements PeopleDAO {
     }
 
     @Override
-    public People getPeople(int id) {
+    public People get(int id) {
         People people = null;
-        String sql = "SELECT * FROM people WHERE id=?";
         try {
             connection = getConnection();
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
+            callableStatement = connection.prepareCall("{call getPeople(?)}");
+            callableStatement.setInt("inId", id);
+            resultSet = callableStatement.executeQuery();
+            if (resultSet.next()) {
                 people = People.builder()
                         .name(resultSet.getString("name"))
                         .surname(resultSet.getString("surname"))
@@ -129,6 +126,28 @@ public class PeopleImpl extends ConnectionDB implements PeopleDAO {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            if (resultSet!=null){
+                try {
+                    resultSet.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+            if (callableStatement!=null){
+                try {
+                    callableStatement.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+            if (connection!=null){
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
         }
         return people;
     }

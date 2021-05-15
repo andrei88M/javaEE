@@ -1,0 +1,64 @@
+CREATE PROCEDURE createTable()
+begin
+    CREATE TABLE if not exists address
+    (
+        id     int auto_increment,
+        street varchar(50),
+        house  int,
+        primary key (id)
+    );
+    CREATE TABLE if not exists people
+    (
+        id      int auto_increment,
+        name    varchar(50),
+        surname varchar(50),
+        age     int,
+        primary key (id)
+    );
+end;
+
+CREATE PROCEDURE dropTable()
+begin
+    DROP TABLE if exists address;
+    DROP TABLE if exists people;
+end;
+
+CREATE PROCEDURE getAddress(in inId int)
+begin
+    SELECT * FROM address WHERE id = inId;
+end;
+
+CREATE PROCEDURE saveAddress(inStreet varchar(50), inHouse int)
+begin
+    INSERT INTO address(street, house) VALUES (inStreet, inHouse);
+end;
+
+CREATE PROCEDURE updateAddress(inStreet varchar(50), inHouse int, inId int)
+begin
+    UPDATE address SET street=inStreet, house=inHouse WHERE id = inId;
+end;
+
+CREATE PROCEDURE deleteAddress(inId int)
+begin
+    DELETE FROM address WHERE id = inId;
+end;
+
+CREATE PROCEDURE savePeople(inName varchar(50), inSurname varchar(50), inAge int)
+begin
+    INSERT INTO people(name, surname, age) VALUES (inName, inSurname, inAge);
+end;
+
+CREATE PROCEDURE updatePeople(inId int, inName varchar(50), inSurname varchar(50), inAge int)
+begin
+    UPDATE people SET name=inName, surname=inSurname, age=inAge WHERE id = inId;
+end;
+
+CREATE PROCEDURE deletePeople(inId int)
+begin
+    DELETE FROM people WHERE id=inId;
+end;
+
+CREATE PROCEDURE getPeople(inId int, out outName varchar(50), out outSurname varchar(50), out outAge int)
+begin
+    SELECT name, surname, age FROM people WHERE id=inId;
+end;
