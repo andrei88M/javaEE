@@ -1,10 +1,10 @@
-package util;
+package by.it.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Creator extends ConnectionDB{
+public class Creator extends ConnectionDB {
     public void createDB() {
         String createSQL = "CREATE DATABASE hw";
         String dropSQL = "DROP DATABASE if exists hw";
