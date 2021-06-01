@@ -5,6 +5,7 @@
     <persistence-unit name="by.it">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>by.it.entity.Address</class>
+        <class>by.it.entity.People</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url"
