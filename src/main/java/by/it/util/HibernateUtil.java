@@ -1,4 +1,4 @@
-package by.it;
+package by.it.util;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,18 +11,11 @@ public class HibernateUtil {
         emFactory = Persistence.createEntityManagerFactory("by.it");
     }
 
-    public static EntityManager getEntityManager(){
-        return emFactory.createEntityManager();
-    }
-    public static void close(){
-        emFactory.close();
-    }
-}
-/*
     public static EntityManager getEntityManager() {
-        return entityManagerFactory.createEntityManager();
+        return emFactory.createEntityManager();
     }
 
     public static void close() {
-        entityManagerFactory.close();
-    }*/
+        emFactory.close();
+    }
+}

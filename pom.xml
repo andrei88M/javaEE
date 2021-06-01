@@ -31,9 +31,8 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
-            <type>pom</type>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.4.Final</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -45,6 +44,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.1.2</version>
+            <type>maven-plugin</type>
         </dependency>
     </dependencies>
 

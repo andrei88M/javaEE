@@ -1,19 +1,27 @@
 package by.it.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 @Builder
-@Setter
-@Getter
-@ToString
+@Table(name = "people")
 public class People implements Serializable {
-    private int id;
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    @Column
     private String name;
+
+    @Column
     private String surname;
+
+    @Column
     private int age;
 }
