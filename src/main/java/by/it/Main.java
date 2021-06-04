@@ -1,8 +1,20 @@
 package by.it;
 
+import by.it.model.Address;
+import by.it.util.SessionUtil;
+import org.hibernate.Session;
+
 public class Main {
-    //То же само что в
-    //18.05.2021 Практическая часть
-    //
-    //Реализовать единый механизм для добавления нового репозитория
+    public static void main(String[] args) {
+        SessionUtil sessionUtil = new SessionUtil();
+        Session session = sessionUtil.getSession();
+        session.getTransaction().begin();
+
+        Address address = Address.builder().id(null).house(11).build();
+        session.persist(address);
+
+
+        session.getTransaction().commit();
+        sessionUtil.stopSessionFactory();
+    }
 }
