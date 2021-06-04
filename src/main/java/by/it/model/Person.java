@@ -3,6 +3,8 @@ package by.it.model;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Data
@@ -10,7 +12,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Person  {
+@Entity
+public class Person  implements Serializable{
+    @Id
+    @GeneratedValue
     private Integer id;
     private Integer age;
     private String name;
