@@ -12,11 +12,11 @@
         <property name="hibernate.connection.password">54321</property>
         <property name="hibernate.connection.pool_size">10</property>
         <property name="show_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">create</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="dialect">org.hibernate.dialect.MySQL55Dialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
 
-       <mapping class="by.it.model.Address"/>
+        <mapping class="by.it.model.Address"/>
         <mapping class="by.it.model.Person"/>
 
 

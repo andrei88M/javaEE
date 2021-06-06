@@ -7,13 +7,14 @@ import org.hibernate.cfg.Configuration;
 public class SessionUtil {
     private SessionFactory sessionFactory;
 
-    public SessionUtil() {
+    {
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
+
 
     public Session getSession() {
         return sessionFactory.openSession();
